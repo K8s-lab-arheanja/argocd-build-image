@@ -20,7 +20,7 @@ node {
         }
     }
 
-    stage('Push image to Nexus') {
+    stage('Push image to Harbor') {
         sh 'docker login -u admin -p admin http://harbor-devopsodia.com'
             app.push("${env.BUILD_NUMBER}")
     }
