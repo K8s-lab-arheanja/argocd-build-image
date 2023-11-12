@@ -25,7 +25,7 @@ node {
     //         app.push("${env.BUILD_NUMBER}")
     // }
     stage('Push image to Nexus Docker Repository') {
-    withCredentials([usernamePassword(credentialsId: 'nexus-docker-credentials', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+    withCredentials([usernamePassword(credentialsId: 'nexus-repo', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
         sh "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin http://192.168.1.125:8081/repository/argocd-dev/"
         app.push("${env.BUILD_NUMBER}")
         sh "docker logout http://192.168.1.125:8081/repository/argocd-dev/"
