@@ -16,17 +16,9 @@ node {
     }
 
     stage('Push image to Harbor') {
-        script {
-            // Almacena las credenciales en variables
-            def harborCredentials = credentials('nexus')
-            def dockerUsername = harborCredentials.username
-            def dockerPassword = harborCredentials.password
-
-            // Utiliza las credenciales almacenadas en Jenkins
-            withCredentials([usernamePassword(credentialsId: 'nexus', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
-                sh "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin http://192.168.1.125:9091/repository/argocd-dev/"
-                app.push("${env.BUILD_NUMBER}")
-            }
+        withCredentials([usernamePassword(credentialsId: 'nexus', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+            sh "docker login -u \$DOCKER_USERNAME -p \$DOCKER_PASSWORD http://192.168.1.125:9091/repository/argocd-dev/"
+            app.push("${env.BUILD_NUMBER}")
         }
     }
 
@@ -35,5 +27,3 @@ node {
         build job: 'argocd-update-manifest', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
     }
 }
-
-
