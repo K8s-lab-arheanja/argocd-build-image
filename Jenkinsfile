@@ -20,8 +20,11 @@ node {
             // Específica las credenciales de Docker directamente aquí
             def dockerCredentials = 'admin:jaime'
 
-            sh "echo $dockerCredentials | docker login -u admin --password-stdin http://192.168.1.125:9091/repository/argocd-dev/"
-            app.push("${env.BUILD_NUMBER}")
+            // Utiliza las credenciales almacenadas en Jenkins
+            withCredentials([usernamePassword(credentialsId: 'nexus', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
+                sh "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin http://192.168.1.125:9091/repository/argocd-dev/"
+                app.push("${env.BUILD_NUMBER}")
+            }
         }
     }
 
