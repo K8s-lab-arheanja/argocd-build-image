@@ -17,8 +17,10 @@ node {
 
     stage('Push image to Harbor') {
         script {
-            // Específica las credenciales de Docker directamente aquí
-            def dockerCredentials = 'admin:jaime'
+            // Almacena las credenciales en variables
+            def harborCredentials = credentials('nexus')
+            def dockerUsername = harborCredentials.username
+            def dockerPassword = harborCredentials.password
 
             // Utiliza las credenciales almacenadas en Jenkins
             withCredentials([usernamePassword(credentialsId: 'nexus', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
@@ -33,4 +35,5 @@ node {
         build job: 'argocd-update-manifest', parameters: [string(name: 'DOCKERTAG', value: env.BUILD_NUMBER)]
     }
 }
+
 
