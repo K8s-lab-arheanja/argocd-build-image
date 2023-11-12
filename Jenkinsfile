@@ -9,7 +9,7 @@ node {
 
     stage('Build Docker image') {
   
-       app = docker.build("192.168.1.125:9091/image-argocd-dev/dev:${env.BUILD_NUMBER}")
+       app = docker.build("192.168.1.125:9091/argocd-dev/arheanja:${env.BUILD_NUMBER}")
     }
 
     stage('Test Docker image') {
@@ -21,7 +21,7 @@ node {
     }
 
     stage('Push image to Harbor') {
-        sh 'docker login -u admin -p admin http://292.168.1.125:9091/repository/image-argocd-dev/*'
+        sh 'docker login -u admin -p admin http://292.168.1.125:9091/repository/argocd-dev/*'
             app.push("${env.BUILD_NUMBER}")
     }
     stage('Trigger Update Manifest') {
