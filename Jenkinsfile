@@ -17,7 +17,8 @@ node {
 
     stage('Push image to Harbor') {
         withCredentials([usernamePassword(credentialsId: 'nexus', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME')]) {
-            sh "docker login -u \$DOCKER_USERNAME -p \$DOCKER_PASSWORD http://192.168.1.125:9091/repository/argocd-dev/"
+            // Utilizar --password-stdin para evitar la exposición de la contraseña en el comando
+            sh "echo \$DOCKER_PASSWORD | docker login -u \$DOCKER_USERNAME --password-stdin http://192.168.1.125:9091/repository/argocd-dev/"
             app.push("${env.BUILD_NUMBER}")
         }
     }
