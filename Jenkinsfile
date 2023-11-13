@@ -21,7 +21,7 @@ node {
     }
 
     stage('Push image to Harbor') {
-        sh 'docker login -u admin -p admin http://192.168.1.125:9090/repository/argocd-dev/'
+        sh 'docker login -u admin -p admin https://192.168.1.125:9090/repository/argocd-dev/'
             app.push("${env.BUILD_NUMBER}")
     }
     stage('Trigger Update Manifest') {
